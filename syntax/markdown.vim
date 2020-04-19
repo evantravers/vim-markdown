@@ -62,8 +62,7 @@ execute 'syn region htmlBoldItalic matchgroup=mkdBoldItalic start="\%(^\|\s\)\zs
 execute 'syn region htmlBoldItalic matchgroup=mkdBoldItalic start="\%(^\|\s\)\zs___\ze\S" end="\S\zs___" keepend contains=@Spell' . s:oneline . s:concealends
 
 " [link](URL) | [link][id] | [link][] | ![image](URL)
-syn region mkdFootnotes matchgroup=mkdDelimiter start="\[^"    end="\]"
-execute 'syn region mkdID matchgroup=mkdDelimiter    start="\["    end="\]" contained oneline' . s:conceal
+execute 'syn region mkdFootnotes matchgroup=mkdDelimiter    start="\[\["    end="\]\]" contained oneline'
 execute 'syn region mkdURL matchgroup=mkdDelimiter   start="("     end=")"  contained oneline' . s:conceal
 execute 'syn region mkdLink matchgroup=mkdDelimiter  start="\\\@<!!\?\[\ze[^]\n]*\n\?[^]\n]*\][[(]" end="\]" contains=@mkdNonListItem,@Spell nextgroup=mkdURL,mkdID skipwhite' . s:concealends
 
@@ -120,6 +119,13 @@ syn match  mkdRule         /^\s*_\s\{0,1}_\s\{0,1}_\(_\|\s\)*$/
 if get(g:, 'vim_markdown_frontmatter', 0)
   syn include @yamlTop syntax/yaml.vim
   syn region Comment matchgroup=mkdDelimiter start="\%^---$" end="^\(---\|\.\.\.\)$" contains=@yamlTop keepend
+  unlet! b:current_syntax
+endif
+
+" MultiMarkdown 6 Frontmatter
+if get(g:, 'vim_multimarkdown_frontmatter', 1)
+  syn include @yamlTop syntax/yaml.vim
+  syn region Comment matchgroup=NONE start="\%^" end="^$" contains=@yamlTop keepend
   unlet! b:current_syntax
 endif
 
